@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unique Visitor Counter</title>
+</head>
+<body>
+    <h1>Welcome to My Web Page</h1>
+    <p>This page tracks the number of unique visitors.</p>
+
+    <div id="visitorCount">Loading...</div>
+
+    <script>
+        // Function to get or set the visitor count from a cookie
+        function getVisitorCount() {
+            const cookieName = "visitorCount";
+            let count = parseInt(getCookie(cookieName), 10) || 0;
+
+            return {
+                getCount: () => count,
+                increment: () => {
+                    count++;
+                    setCookie(cookieName, count, 365);
+                }
+            };
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + "; " + expires + "; path=/";
+        }
+
+        // Function to get a cookie
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(name + "=") === 0) {
+                    return cookie.substring(name.length + 1, cookie.length);
+                }
+            }
+            return "";
+        }
+
+        // Function to update and display the visitor count
+        function updateVisitorCount() {
+            const visitor = getVisitorCount();
+            visitor.increment();
+
+            const visitorCountElement = document.getElementById("visitorCount");
+            visitorCountElement.textContent = `Unique Visitors: ${visitor.getCount()}`;
+        }
+
+        // Call the updateVisitorCount function when the page loads
+        updateVisitorCount();
+    </script>
+</body>
+</html>
